@@ -19,7 +19,16 @@ class TransactionAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(transaction: Transaction) {
             binding.tvTitle.text = transaction.title
-            binding.tvCategoryDate.text = "${transaction.category} • ${transaction.date}"
+            
+            val displayDate = try {
+                val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+                val outputFormat = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
+                val date = inputFormat.parse(transaction.date)
+                if (date != null) outputFormat.format(date) else transaction.date
+            } catch (e: Exception) {
+                transaction.date
+            }
+            binding.tvCategoryDate.text = "${transaction.category} • $displayDate"
             
             val amountText = rupiahFormat.format(transaction.amount).replace("Rp", "Rp ")
             if (transaction.type == "Pemasukan") {

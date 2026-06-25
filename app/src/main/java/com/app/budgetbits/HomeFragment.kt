@@ -25,6 +25,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = FragmentHomeBinding.bind(view)
         dbHelper = DatabaseHelper(requireContext())
 
+        // Ambil nama dari SharedPreferences
+        val sharedPrefs = requireContext().getSharedPreferences("budgetbits_prefs", android.content.Context.MODE_PRIVATE)
+        val name = sharedPrefs.getString("USER_NAME", "Siti Aminah")
+        binding.tvWelcomeName.text = "Halo, $name!"
+
         // Aksi pindah ke AddTransactionFragment melalui tombol melayang (FAB)
         binding.fabTambah.setOnClickListener {
             (activity as? MainActivity)?.replaceFragment(AddTransactionFragment(), true)
@@ -36,6 +41,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.btnActionRencana.setOnClickListener {
             (activity as? MainActivity)?.replaceFragment(RencanaFragment(), true)
+        }
+
+        binding.btnActionEkspor.setOnClickListener {
+            exportTransactionsToCSV()
         }
 
         binding.tvSeeAll.setOnClickListener {
@@ -76,9 +85,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setupRecentTransactions() {
         // Ambil 3 transaksi terbaru dari Database
-        val transactions = dbHelper.getAllTransactions().take(3)
+        val transactions = dbHelper.getRecentTransactions(3)
         val adapter = TransactionAdapter(transactions) { clickedTransaction ->
             val bundle = Bundle().apply {
+                putInt("EXTRA_ID", clickedTransaction.id)
                 putString("EXTRA_TITLE", clickedTransaction.title)
                 putString("EXTRA_CATEGORY", clickedTransaction.category)
                 putString("EXTRA_DATE", clickedTransaction.date)
@@ -143,6 +153,45 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.pieChart.setCenterTextSize(14f)
         binding.pieChart.animateY(1000)
         binding.pieChart.invalidate()
+    }
+
+    private fun exportTransactionsToCSV() {
+        val transactions = dbHelper.getAllTransactions()
+        if (transactions.isEmpty()) {
+            android.widget.Toast.makeText(requireContext(), "Belum ada transaksi untuk diekspor!", android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val csvHeader = "ID,Judul,Kategori,Jumlah,Tanggal,Lokasi,Tipe\n"
+        val csvBody = StringBuilder()
+        transactions.forEach { t ->
+            val cleanTitle = t.title.replace(",", " ")
+            val cleanLocation = t.location.replace(",", " ")
+            csvBody.append("${t.id},$cleanTitle,${t.category},${t.amount},${t.date},$cleanLocation,${t.type}\n")
+        }
+        
+        val csvData = csvHeader + csvBody.toString()
+
+        try {
+            val file = java.io.File(requireContext().cacheDir, "BudgetBits_Transaksi.csv")
+            file.writeText(csvData)
+
+            val contentUri = androidx.core.content.FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.fileprovider",
+                file
+            )
+
+            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "text/csv"
+                putExtra(android.content.Intent.EXTRA_STREAM, contentUri)
+                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(android.content.Intent.createChooser(shareIntent, "Ekspor Transaksi via"))
+
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(requireContext(), "Gagal mengekspor file: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {

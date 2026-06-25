@@ -19,6 +19,7 @@
             android:padding="@dimen/space_lg">
 
             <TextView
+                android:id="@+id/tvWelcomeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Halo, Siti!"
@@ -166,11 +167,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/btnActionEkspor"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
