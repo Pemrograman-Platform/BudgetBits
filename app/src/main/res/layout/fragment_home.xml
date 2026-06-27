@@ -363,12 +363,14 @@
                         android:orientation="vertical"
                         android:layout_marginStart="12dp">
                         <TextView
+                            android:id="@+id/tvTipTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pentingnya Dana Darurat"
                             android:textStyle="bold"
                             android:textColor="@color/text_primary"/>
                         <TextView
+                            android:id="@+id/tvTipDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sisihkan minimal 10% pendapatan untuk dana darurat demi keamanan finansial."

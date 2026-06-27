@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "title": "Aturan Anggaran 50/30/20",
+    "description": "Bagi pendapatan Anda secara sederhana: 50% untuk kebutuhan pokok harian, 30% untuk keinginan pribadi, dan 20% untuk tabungan atau investasi masa depan."
+  },
+  {
+    "id": 2,
+    "title": "Terapkan Aturan 24 Jam",
+    "description": "Tunggulah 24 jam sebelum memutuskan untuk membeli barang non-primer (keinginan). Ini membantu mengurangi belanja impulsif yang tidak direncanakan."
+  },
+  {
+    "id": 3,
+    "title": "Pentingnya Dana Darurat",
+    "description": "Sisihkan minimal 10% pendapatan bulanan secara rutin hingga terkumpul dana darurat setara 3 sampai 6 kali pengeluaran bulanan."
+  },
+  {
+    "id": 4,
+    "title": "Evaluasi Langganan Bulanan",
+    "description": "Periksa kembali aplikasi atau layanan berlangganan Anda (streaming, gym, game). Matikan yang jarang digunakan untuk menghemat anggaran."
+  },
+  {
+    "id": 5,
+    "title": "Bawa Bekal dan Air Minum",
+    "description": "Membawa bekal makan siang ke kampus atau kantor terbukti bisa menghemat pengeluaran konsumsi harian hingga 40% sebulan!"
+  }
+]

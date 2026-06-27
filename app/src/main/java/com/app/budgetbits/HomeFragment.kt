@@ -55,6 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         updateSummary()
         setupPieChart()
         setupRecentTransactions()
+        loadFinancialTipFromJSON()
     }
 
     private fun updateSummary() {
@@ -191,6 +192,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         } catch (e: Exception) {
             android.widget.Toast.makeText(requireContext(), "Gagal mengekspor file: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadFinancialTipFromJSON() {
+        try {
+            // Membaca file tips.json dari folder assets
+            val jsonString = requireContext().assets.open("tips.json")
+                .bufferedReader()
+                .use { it.readText() }
+
+            // Parsing JSON manual menggunakan JSONObject/JSONArray bawaan Android
+            val jsonArray = org.json.JSONArray(jsonString)
+            if (jsonArray.length() > 0) {
+                // Pilih satu tips secara acak
+                val randomIndex = (0 until jsonArray.length()).random()
+                val tipObject = jsonArray.getJSONObject(randomIndex)
+                val title = tipObject.getString("title")
+                val description = tipObject.getString("description")
+
+                // Bind ke komponen UI di XML
+                binding.tvTipTitle.text = title
+                binding.tvTipDescription.text = description
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            binding.tvTipTitle.text = "Tips Keuangan"
+            binding.tvTipDescription.text = "Kelola anggaran bulanan Anda agar keuangan tetap sehat dan aman!"
         }
     }
 
