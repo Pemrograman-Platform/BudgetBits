@@ -1,5 +1,7 @@
 package com.app.budgetbits
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -7,6 +9,7 @@ import com.app.budgetbits.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val powerConnectionReceiver = PowerConnectionReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Terapkan tema yang disimpan
@@ -40,16 +43,14 @@ class MainActivity : AppCompatActivity() {
     fun replaceFragment(fragment: Fragment, isAppended: Boolean = false) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        
-        // Animasi transisi fragment
+
         fragmentTransaction.setCustomAnimations(
             android.R.anim.fade_in,
             android.R.anim.fade_out,
             android.R.anim.slide_in_left,
             android.R.anim.slide_out_right
         )
-        
-        // Menggunakan ID yang benar dari activity_main.xml
+
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         
         if (isAppended) {
@@ -57,5 +58,19 @@ class MainActivity : AppCompatActivity() {
         }
         
         fragmentTransaction.commit()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_POWER_CONNECTED)
+            addAction(Intent.ACTION_POWER_DISCONNECTED)
+        }
+        registerReceiver(powerConnectionReceiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(powerConnectionReceiver)
     }
 }

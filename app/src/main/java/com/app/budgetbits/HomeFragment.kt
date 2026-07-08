@@ -108,7 +108,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     // Fungsi khusus untuk mengatur Grafik Lingkaran (Pie Chart)
     private fun setupPieChart() {
-        // Hanya ambil transaksi bertipe Pengeluaran untuk grafik
         val transactions = dbHelper.getAllTransactions().filter { it.type == "Pengeluaran" }
         
         if (transactions.isEmpty()) {
@@ -197,21 +196,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun loadFinancialTipFromJSON() {
         try {
-            // Membaca file tips.json dari folder assets
             val jsonString = requireContext().assets.open("tips.json")
                 .bufferedReader()
                 .use { it.readText() }
 
-            // Parsing JSON manual menggunakan JSONObject/JSONArray bawaan Android
             val jsonArray = org.json.JSONArray(jsonString)
             if (jsonArray.length() > 0) {
-                // Pilih satu tips secara acak
                 val randomIndex = (0 until jsonArray.length()).random()
                 val tipObject = jsonArray.getJSONObject(randomIndex)
                 val title = tipObject.getString("title")
                 val description = tipObject.getString("description")
 
-                // Bind ke komponen UI di XML
                 binding.tvTipTitle.text = title
                 binding.tvTipDescription.text = description
             }

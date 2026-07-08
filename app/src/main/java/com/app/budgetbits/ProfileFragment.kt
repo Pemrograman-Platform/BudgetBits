@@ -163,7 +163,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val currentTheme = sharedPrefs.getInt("THEME_MODE", 0)
         
         val options = arrayOf("Mengikuti Sistem (Default)", "Mode Terang", "Mode Gelap")
-        
         AlertDialog.Builder(requireContext())
             .setTitle("Pilih Tema Aplikasi")
             .setSingleChoiceItems(options, currentTheme) { dialog, which ->
